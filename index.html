@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智慧用卡建議</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+:root{
+  --bg:#F7F5F0;--surface:#FFF;--border:#E5E1D8;--border-strong:#C0BAB0;
+  --text:#18120E;--muted:#7A746A;--hint:#B0AA9E;
+  --teal:#0F6E56;--teal-bg:#E1F5EE;--amber:#854F0B;--amber-bg:#FAEEDA;
+  --blue:#185FA5;--blue-bg:#E6F1FB;--green:#3B6D11;--green-bg:#EAF3DE;
+  --red:#A32D2D;--red-bg:#FCEBEB;--r:12px;--rsm:8px;--rpill:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
+header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 1.75rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-size:15px;font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;}
+.dot{width:7px;height:7px;background:#1D9E75;border-radius:50%;}
+.stamp{font-size:11px;color:var(--hint);font-family:'DM Mono',monospace;background:var(--bg);border:1px solid var(--border);padding:3px 10px;border-radius:var(--rpill);}
+.main{max-width:980px;margin:0 auto;padding:1.75rem 1.5rem 5rem;}
+.ptabs{display:flex;gap:6px;margin-bottom:1.75rem;}
+.ptab{padding:7px 18px;border:1px solid var(--border);border-radius:var(--rpill);cursor:pointer;background:var(--surface);color:var(--muted);font-size:13px;font-family:inherit;transition:all .15s;}
+.ptab:hover{color:var(--text);border-color:var(--border-strong);}
+.ptab.active{background:var(--text);color:var(--surface);border-color:var(--text);font-weight:500;}
+.ppanel{display:none;}.ppanel.active{display:block;}
+.adv-layout{display:grid;grid-template-columns:210px 1fr;gap:14px;align-items:start;}
+@media(max-width:700px){.adv-layout{grid-template-columns:1fr;}}
+.cat-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;position:sticky;top:72px;max-height:calc(100vh - 90px);overflow-y:auto;}
+.cg-label{font-size:10px;font-weight:500;letter-spacing:.08em;color:var(--hint);text-transform:uppercase;padding:8px 14px 3px;background:var(--bg);border-bottom:1px solid var(--border);}
+.cbtn{display:block;width:100%;padding:8px 14px;border:none;border-bottom:1px solid var(--border);cursor:pointer;background:transparent;color:var(--muted);font-size:13px;font-family:inherit;text-align:left;transition:all .12s;}
+.cbtn:last-child{border-bottom:none;}
+.cbtn:hover{background:var(--bg);color:var(--text);}
+.cbtn.active{background:var(--text);color:var(--surface);font-weight:500;}
+.det-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;min-height:280px;}
+.det-ph{color:var(--hint);font-size:13px;display:flex;align-items:center;justify-content:center;min-height:200px;text-align:center;line-height:1.8;}
+.det-title{font-size:17px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.det-sub{font-size:12px;color:var(--hint);margin-bottom:1.1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.rlist{display:flex;flex-direction:column;}
+.rrow{padding:12px 0;border-bottom:1px solid var(--border);}
+.rrow:first-child{padding-top:0;}
+.rrow:last-child{border-bottom:none;padding-bottom:0;}
+.rheader{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:5px;}
+.rname{font-size:14px;font-weight:500;color:var(--text);}
+.rtag{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;padding:2px 10px;border-radius:var(--rpill);white-space:nowrap;flex-shrink:0;}
+.tg{background:var(--green-bg);color:var(--green);}
+.tb{background:var(--blue-bg);color:var(--blue);}
+.ta{background:var(--amber-bg);color:var(--amber);}
+.tr{background:var(--red-bg);color:var(--red);}
+.rstores{font-size:12px;color:var(--teal);margin-bottom:4px;line-height:1.6;}
+.rstores b{font-weight:500;color:var(--muted);}
+.rdetail{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:3px;}
+.rcond{font-size:11px;color:var(--hint);font-family:'DM Mono',monospace;line-height:1.5;}
+.wblk{background:var(--red-bg);border-radius:var(--rsm);padding:9px 13px;margin-top:10px;font-size:12px;color:var(--red);font-weight:500;line-height:1.6;}
+.det-footer{margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:10px;color:var(--hint);font-family:'DM Mono',monospace;}
+.slabel{font-size:11px;font-weight:500;letter-spacing:.07em;color:var(--hint);text-transform:uppercase;margin-bottom:1rem;}
+.cgridcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+.ctile{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;}
+.ctile:hover{border-color:var(--border-strong);}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px;}
+.cname{font-size:14px;font-weight:600;color:var(--text);}
+.cbank{font-size:11px;color:var(--hint);margin-top:2px;}
+.cbadge{font-size:10px;padding:3px 9px;border-radius:var(--rpill);font-weight:500;white-space:nowrap;}
+.perks{display:flex;flex-direction:column;gap:6px;}
+.prow{display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;gap:10px;}
+.plabel{color:var(--muted);flex:1;}
+.pright{text-align:right;min-width:85px;}
+.pval{font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--teal);}
+.plimit{font-size:10px;color:var(--hint);margin-top:1px;line-height:1.35;}
+.cfooter{margin-top:11px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.5;}
+.csrc{color:var(--hint);font-size:10px;margin-top:3px;font-family:'DM Mono',monospace;}
+.sbox{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem;margin-bottom:1.25rem;}
+.alabel{font-size:11px;font-weight:500;letter-spacing:.07em;color:var(--hint);text-transform:uppercase;margin-bottom:.75rem;}
+.sinrow{display:flex;gap:8px;margin-bottom:12px;}
+.sinrow input{flex:1;padding:8px 12px;border:1px solid var(--border);border-radius:var(--rsm);font-size:13px;font-family:inherit;background:var(--bg);color:var(--text);outline:none;}
+.sinrow input:focus{border-color:var(--border-strong);}
+.stags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.stag{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--rpill);font-size:13px;}
+.stag button{background:none;border:none;cursor:pointer;color:var(--hint);font-size:15px;line-height:1;padding:0;}
+.stag button:hover{color:var(--red);}
+.srecs{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.srec{display:flex;align-items:center;padding:9px 12px;background:var(--bg);border-radius:var(--rsm);font-size:13px;gap:12px;flex-wrap:wrap;}
+.srec-store{font-weight:500;color:var(--text);min-width:70px;}
+.srec-card{color:var(--muted);flex:1;}
+.srec-rate{font-family:'DM Mono',monospace;color:var(--teal);font-weight:500;}
+.srec-del{background:none;border:none;cursor:pointer;color:var(--hint);font-size:14px;padding:0 4px;}
+.srec-del:hover{color:var(--red);}
+.empty{text-align:center;padding:2rem;color:var(--hint);font-size:13px;}
+.aform{background:var(--bg);border-radius:var(--rsm);padding:1rem;margin-top:12px;display:none;}
+.aform.show{display:block;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.frow input{padding:7px 10px;border:1px solid var(--border);border-radius:var(--rsm);font-size:13px;font-family:inherit;background:var(--surface);color:var(--text);outline:none;width:100%;}
+.frow input::placeholder{color:var(--hint);}
+.factions{display:flex;gap:8px;margin-top:8px;}
+.btn{padding:7px 16px;border:1px solid var(--border-strong);border-radius:var(--rsm);cursor:pointer;background:var(--surface);color:var(--text);font-family:inherit;font-size:13px;font-weight:500;transition:all .15s;}
+.btn:hover{background:var(--bg);}
+.btnp{background:var(--text);color:var(--surface);border-color:var(--text);}
+.btnp:hover{background:#3A342E;}
+.btnsm{padding:6px 13px;font-size:13px;}
+@media(max-width:600px){.main{padding:1.25rem 1rem 3rem;}.cgridcards{grid-template-columns:1fr;}.frow{grid-template-columns:1fr;}header{padding:1rem;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><div class="dot"></div>智慧用卡建議</div>
+  <div class="stamp">資料查核 2026/03 ／ 數字依各銀行官網為準</div>
+</header>
+<div class="main">
+  <div class="ptabs">
+    <button class="ptab active" data-tab="advisor">今天刷哪張？</button>
+    <button class="ptab" data-tab="cards">我的卡片</button>
+    <button class="ptab" data-tab="stores">特定商店記錄</button>
+  </div>
+  <div class="ppanel active" id="tab-advisor">
+    <div class="adv-layout">
+      <div class="cat-panel" id="cat-panel"></div>
+      <div class="det-panel" id="det-panel">
+        <div class="det-ph">← 從左側選擇消費分類<br>查看最佳刷卡建議與適用店家</div>
+      </div>
+    </div>
+  </div>
+  <div class="ppanel" id="tab-cards">
+    <div class="slabel">持有卡片 — 來源：各銀行官網、iCard.AI、creditcards.com.tw、cashfeel.com.tw、beurlife.com，2026/03 查核</div>
+    <div class="cgridcards" id="cards-grid"></div>
+  </div>
+  <div class="ppanel" id="tab-stores">
+    <div class="sbox">
+      <div class="alabel">我常去的店</div>
+      <div class="sinrow">
+        <input type="text" id="store-inp" placeholder="輸入商店名稱後按 Enter 或點新增" />
+        <button class="btn btnp btnsm" onclick="addStore()">新增</button>
+      </div>
+      <div class="stags" id="store-tags"></div>
+    </div>
+    <div class="sbox">
+      <div class="alabel">刷卡攻略備忘錄</div>
+      <button class="btn btnsm" onclick="document.getElementById('store-form').classList.toggle('show')">+ 新增記錄</button>
+      <div class="aform" id="store-form">
+        <div class="frow"><input id="sf-store" placeholder="商店名稱" /><input id="sf-card" placeholder="推薦刷哪張卡" /></div>
+        <div class="frow"><input id="sf-rate" placeholder="回饋率" /><input id="sf-note" placeholder="條件/備註" /></div>
+        <div class="factions">
+          <button class="btn btnp btnsm" onclick="saveStoreRec()">儲存</button>
+          <button class="btn btnsm" onclick="document.getElementById('store-form').classList.remove('show')">取消</button>
+        </div>
+      </div>
+      <div class="srecs" id="store-recs"></div>
+    </div>
+  </div>
+</div>
+<script>const CAT_GROUPS=[
+  {group:'行動支付',cats:[
+    {id:'linepay',label:'LINE Pay'},
+    {id:'jkos',label:'街口支付'},
+    {id:'pi_pay',label:'Pi 錢包'},
+    {id:'applepay',label:'Apple Pay / Google Pay'},
+  ]},
+  {group:'超商',cats:[
+    {id:'711',label:'7-ELEVEN'},
+    {id:'family',label:'全家 FamilyMart'},
+    {id:'hilife',label:'萊爾富 Hi-Life'},
+  ]},
+  {group:'量販 / 超市',cats:[
+    {id:'pxmart',label:'全聯'},
+    {id:'carrefour',label:'家樂福'},
+    {id:'costco',label:'Costco 好市多'},
+    {id:'darunfa',label:'大潤發'},
+    {id:'ikea',label:'IKEA'},
+  ]},
+  {group:'餐飲',cats:[
+    {id:'dining',label:'餐廳 / 外食'},
+    {id:'delivery',label:'外送平台'},
+    {id:'cafe',label:'咖啡 / 飲料'},
+  ]},
+  {group:'網購 / 訂閱',cats:[
+    {id:'online',label:'網購平台'},
+    {id:'streaming',label:'串流影音'},
+    {id:'aitools',label:'AI 工具訂閱'},
+    {id:'games',label:'遊戲 / 數位商店'},
+  ]},
+  {group:'百貨 / 購物中心',cats:[
+    {id:'skm',label:'新光三越'},
+    {id:'sogo',label:'SOGO 崇光'},
+    {id:'breeze',label:'微風廣場'},
+    {id:'att',label:'ATT / 統一時代 / 京站 / 三創'},
+    {id:'dept_other',label:'其他百貨'},
+  ]},
+  {group:'日系品牌',cats:[
+    {id:'uniqlo',label:'UNIQLO'},
+    {id:'gu',label:'GU'},
+    {id:'muji',label:'無印良品 MUJI'},
+    {id:'nitori',label:'宜得利 Nitori'},
+    {id:'donki',label:'唐吉軻德 Don Don Donki'},
+    {id:'niko',label:'niko and... / 其他日系服飾'},
+  ]},
+  {group:'交通 / 停車',cats:[
+    {id:'train',label:'高鐵 / 台鐵 / 捷運'},
+    {id:'parking',label:'停車場'},
+  ]},
+  {group:'加油 / 充電',cats:[
+    {id:'gas',label:'加油 / 電動車充電'},
+  ]},
+  {group:'旅遊 / 海外',cats:[
+    {id:'flight',label:'機票 / 訂房'},
+    {id:'japan',label:'日本消費'},
+    {id:'abroad',label:'其他海外消費'},
+  ]},
+];
+
+const R={
+  linepay:{title:'LINE Pay',sub:'各卡 LINE Pay 回饋建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'2.3%',rc:'tg',
+       stores:'非超商通路（超商 LINE Pay 有銀行限制，見下方警示）',
+       detail:'切換【Pay著刷】，LINE Pay 綁台新卡享 2.3% 無上限。',
+       cond:'需設定台新帳戶自動扣繳達 Level2；有效至 2026/6/30｜來源：台新官網'},
+      {card:'玉山 UBear 卡',rate:'最高3%',rc:'tg',
+       stores:'非超商通路（超商、全聯、分期交易明確排除）',
+       detail:'LINE Pay 屬行動支付通路，享最高 3%（基本 1% + 加碼 2%）。',
+       cond:'加碼 2% 每期上限 $150；逐筆無條件捨去，單筆需 ≥$100｜來源：玉山官網、iCard.AI 2026/03'},
+      {card:'國泰 CUBE 卡（領券制）',rate:'最高2%',rc:'tb',
+       stores:'非超商通路',
+       detail:'⚠「來支付」方案已於 2025/12 取消。LINE Pay 改為領券制：至 CUBE App 領券，當月 LINE Pay 消費達 8 筆享最高 2%。',
+       cond:'每月上限 100 點；活動期間每戶上限 400 點｜來源：cashfeel.com.tw 2026/03'},
+    ],
+    warns:[
+      '⚠ 超商 LINE Pay 銀行限制：7-ELEVEN 僅接受台新、中信、國泰世華、富邦、聯邦卡；全家僅接受台新、中信、聯邦、富邦卡。玉山卡、永豐卡無法在 7-11 / 全家使用 LINE Pay！（來源：Money101 2026/03）',
+    ]},
+  jkos:{title:'街口支付',sub:'各卡街口支付回饋建議（2026/03 查核）',
+    items:[
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'任何接受街口的店家（7-ELEVEN 僅能透過街口使用永豐卡）',
+       detail:'大戶等級全通路無腦刷，街口視為一般消費，3.5%。',
+       cond:'DAWHO 帳戶月均餘額需達 $10 萬；需同時完成自動扣繳＋電子帳單；月加碼上限 $400｜來源：永豐官網 2026/01'},
+      {card:'玉山 UBear 卡',rate:'最高3%',rc:'tg',
+       stores:'任何接受街口的店家（超商排除）',
+       detail:'街口支付屬行動支付通路，享最高 3%（基本 1% + 加碼 2%）。',
+       cond:'加碼每期上限 $150；超商消費排除；單筆需 ≥$100｜來源：beurlife.com 2026/03'},
+      {card:'台新 Richart 卡',rate:'⚠ 0.3%',rc:'tr',
+       stores:'─',
+       detail:'街口支付在台新 Richart 卡所有方案均不適用加碼，只拿基本 0.3%。',
+       cond:'唯一例外：切換【假日刷】在週末/國定假日消費享 2%｜來源：台新官網排除條款'},
+    ],
+    warns:[
+      '⚠ 台新官網明確列出：街口支付不適用任何加碼方案。任何切換方案下刷街口均只拿 0.3%。（來源：台新銀行官網）',
+    ]},
+  pi_pay:{title:'Pi 錢包',sub:'Pi 錢包刷卡建議（2026/03 查核）',
+    items:[
+      {card:'玉山 Pi 錢包卡',rate:'5% P幣',rc:'tg',
+       stores:'全家 FamilyMart（需使用 Pi 拍錢包感應）',
+       detail:'綁 Pi 拍錢包在全家消費，享 5% P幣，每月上限 100 P幣（$2,000）。',
+       cond:'需綁定 Pi 拍錢包 App；P幣效期自匯入起 180 天｜來源：玉山官網 2026/03'},
+      {card:'玉山 UBear 卡',rate:'最高3%',rc:'tb',
+       stores:'Pi 錢包支援商家（超商排除）',
+       detail:'Pi 錢包屬行動支付通路，享最高 3%（加碼每期上限 $150）。',
+       cond:'超商排除；單筆需 ≥$100｜來源：玉山官網 2026/03'},
+    ],
+    warns:[]},
+  applepay:{title:'Apple Pay / Google Pay',sub:'感應支付刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.8%',rc:'tg',
+       stores:'7-ELEVEN、全家、萊爾富、新光三越、IKEA、大潤發、康是美、路易莎、漢堡王、台灣大車隊等（台新 Pay 支援通路）',
+       detail:'切換【Pay著刷】，Apple Pay / Google Pay 綁台新卡視同台新 Pay，享 3.8%。',
+       cond:'需設定台新帳戶扣繳達 Level2；2026/6/30 止｜來源：台新官網 2026/01'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'全家、萊爾富及所有其他店家（注意：7-ELEVEN 不可使用）',
+       detail:'大戶等級全通路 3.5%，Apple Pay / Google Pay 視為一般感應消費。',
+       cond:'月加碼上限 $400；7-ELEVEN 禁止使用（見警示）｜來源：永豐官網'},
+    ],
+    warns:[
+      '⚠ 永豐大戶卡：自 2024/1/1 起不可在 7-ELEVEN 使用 Apple Pay、Google Pay，也不可直刷，僅能透過街口支付（享 3.5% 回饋）。（來源：永豐公告）',
+    ]},
+  '711':{title:'7-ELEVEN',sub:'7-11 刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.8%',rc:'tg',
+       stores:'7-ELEVEN 全台門市（需用台新 Pay 感應，或 LINE Pay 綁台新卡）',
+       detail:'切換【Pay著刷】，台新 Pay 在 7-11 享 3.8%；LINE Pay 綁台新也支援 7-11。',
+       cond:'需設定台新帳戶扣繳達 Level2；2026/6/30 止｜來源：台新官網'},
+      {card:'國泰 CUBE 卡',rate:'2%',rc:'tb',
+       stores:'7-ELEVEN 全台門市（直刷或 LINE Pay 綁國泰）',
+       detail:'切換【集精選】，7-11 消費享 2% 小樹點。',
+       cond:'需達 Level2；分期、超商代收排除｜來源：國泰官網 2026/03'},
+    ],
+    warns:[
+      '⚠ 永豐大戶卡：2024/1/1 起不可在 7-ELEVEN 直刷、不可用 Apple Pay / Google Pay，僅能透過街口支付享 3.5% 回饋。',
+      '⚠ 聯邦吉鶴卡（JCB）：7-ELEVEN 不接受 JCB 直刷。',
+      '⚠ 玉山 Pi 錢包卡 / UBear 卡：超商明確排除網購加碼，直刷僅享基本 1%。',
+    ]},
+  family:{title:'全家 FamilyMart',sub:'全家刷卡建議（2026/03 查核）',
+    items:[
+      {card:'玉山 Pi 錢包卡',rate:'5% P幣',rc:'tg',
+       stores:'全家 FamilyMart 全台門市（需用 Pi 拍錢包感應）',
+       detail:'綁 Pi 拍錢包在全家消費，5% P幣，每月上限 100 P幣（約 $2,000）。',
+       cond:'需綁定 Pi 拍錢包 App；P幣效期 180 天｜來源：玉山官網'},
+      {card:'台新 Richart 卡',rate:'3.8%',rc:'tg',
+       stores:'全家 FamilyMart 全台門市（台新 Pay 感應或 LINE Pay 綁台新）',
+       detail:'切換【Pay著刷】，台新 Pay 在全家 3.8%。',
+       cond:'需設定台新帳戶扣繳達 Level2｜來源：台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'全家 FamilyMart 全台門市（可直刷，無 7-11 限制）',
+       detail:'大戶等級全通路 3.5%，全家可直刷或 Apple Pay 均可。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+      {card:'國泰 CUBE 卡',rate:'2%',rc:'ta',
+       stores:'全家 FamilyMart 全台門市',
+       detail:'切換【集精選】，全家消費享 2% 小樹點。',
+       cond:'需達 Level2｜來源：國泰官網'},
+    ],
+    warns:[
+      '⚠ 玉山 UBear 卡：超商明確排除，直刷全家僅享基本 1%。',
+    ]},
+  hilife:{title:'萊爾富 Hi-Life',sub:'萊爾富刷卡建議（2026/03 查核）',
+    items:[
+      {card:'聯邦吉鶴卡',rate:'95折（約5%）',rc:'tg',
+       stores:'萊爾富 Hi-Life 全台門市（JCB 直刷或 Apple Pay 均可）',
+       detail:'聯邦信用卡在萊爾富直接享 95 折，無金額上限，無需登錄。',
+       cond:'有效至 2026/6/30｜來源：creditcards.com.tw 2026/01'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'萊爾富 Hi-Life 全台門市（可直刷，無限制）',
+       detail:'大戶等級全通路 3.5%，萊爾富接受永豐卡直刷。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'萊爾富（切換【天天刷】，列入超商通路）',
+       detail:'切換【天天刷】，萊爾富列入超商通路，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+    ],
+    warns:[]},
+  pxmart:{title:'全聯 PX Mart',sub:'全聯刷卡建議（2026/03 查核）',
+    items:[
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'全聯福利中心全台門市',
+       detail:'大戶等級全通路無腦刷，全聯屬一般消費，3.5%，無需切換。',
+       cond:'月加碼上限 $400；需 DAWHO 帳戶月均 $10 萬｜來源：永豐官網'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'全聯福利中心（確認列入當期方案）',
+       detail:'切換對應方案，全聯若列入指定通路享 3.3%。',
+       cond:'每日限切換一次；每期確認官網通路清單｜來源：台新官網'},
+      {card:'國泰 CUBE 卡',rate:'2%',rc:'ta',
+       stores:'全聯福利中心（切換【集精選】）',
+       detail:'切換【集精選】，全聯列入指定量販/超市通路，2% 無上限。',
+       cond:'需達 Level2｜來源：國泰官網'},
+    ],
+    warns:[
+      '⚠ 玉山 UBear 卡：全聯明確排除在網購加碼外，不建議使用。（來源：iCard.AI 2026/03）',
+    ]},
+  carrefour:{title:'家樂福',sub:'家樂福量販 / 超市刷卡建議（2026/03 查核）',
+    items:[
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'家樂福量販（台北南港、中和、內湖等大店）、家樂福超市全台',
+       detail:'大戶等級全通路無腦刷，家樂福屬一般消費，3.5%。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'家樂福量販及超市（切換【天天刷】）',
+       detail:'切換【天天刷】，家樂福列入量販通路，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+    ],
+    warns:[]},
+  costco:{title:'Costco 好市多',sub:'Costco 刷卡建議（2026/03 查核）',
+    items:[
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'Costco 好市多全台（北投、中和、內湖、桃園、新竹、台中、高雄等）',
+       detail:'大戶等級全通路無腦刷，Costco 屬一般消費，是六張卡中唯一高回饋選擇。',
+       cond:'月加碼上限 $400；需 DAWHO 帳戶月均 $10 萬｜來源：永豐官網'},
+    ],
+    warns:[
+      '⚠ 台新 Richart 卡：Costco 不在任何切換方案指定通路內，僅享基本 0.3%，不建議。',
+      '⚠ 國泰 CUBE 卡：各方案均不含 Costco，非指定通路僅 0.3%，不建議直刷。',
+      '⚠ 聯邦吉鶴卡（JCB）：Costco 台灣門市不接受 JCB，無法使用。',
+    ]},
+  darunfa:{title:'大潤發',sub:'大潤發刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.8%',rc:'tg',
+       stores:'大潤發全台門市（台新 Pay 官方列名通路）',
+       detail:'切換【Pay著刷】，台新 Pay 在大潤發消費，3.8%。',
+       cond:'需設定台新帳戶扣繳達 Level2；2026/6/30 止｜來源：台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'大潤發全台門市',
+       detail:'大戶等級全通路 3.5%。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  ikea:{title:'IKEA',sub:'IKEA 刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.8%',rc:'tg',
+       stores:'IKEA 全台門市：桃園、新莊、高雄、台南、台中（台新 Pay 官方列名）',
+       detail:'切換【Pay著刷】，台新 Pay 在 IKEA 消費，3.8%。',
+       cond:'需設定台新帳戶扣繳達 Level2；2026/6/30 止｜來源：台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'IKEA 全台門市',
+       detail:'大戶等級全通路 3.5%。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+      {card:'國泰 CUBE 卡',rate:'2%',rc:'ta',
+       stores:'IKEA 全台門市（切換【集精選】）',
+       detail:'切換【集精選】，IKEA 列入量販通路，2%。',
+       cond:'需達 Level2｜來源：國泰官網'},
+    ],
+    warns:[]},
+  dining:{title:'餐廳 / 外食',sub:'實體餐廳刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.3~3.8%',rc:'tg',
+       stores:'台新 Pay 支援→3.8%：路易莎、漢堡王、麥當勞；其他餐廳切換【好饗刷】→3.3%：王品集團、鬍鬚張、KTV（好樂迪/錢櫃）、FunNow、飯店餐廳（台中洲際、雲朗集團）',
+       detail:'台新 Pay 支援店 3.8%；其他餐廳切換【好饗刷】3.3%，無上限。',
+       cond:'需 Level2；每日限切換一次｜來源：台新官網'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'tg',
+       stores:'切換【樂饗購】：一般餐廳、王品集團、鬍鬚張、星巴克、路易莎、麥當勞等',
+       detail:'切換【樂饗購】，指定餐飲通路享 3% 小樹點無上限。',
+       cond:'需達 Level2；每日限切換一次｜來源：國泰官網'},
+      {card:'聯邦吉鶴卡',rate:'最高10%折扣',rc:'tg',
+       stores:'台灣指定日系餐廳（需現場出示實體吉鶴卡，詳聯邦官網清單）',
+       detail:'在台灣指定日系餐廳持吉鶴卡消費，現場出示實體卡享最高 10% 折扣。',
+       cond:'需現場出示實體卡；各店條件不同｜來源：聯邦官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'所有餐廳（無通路限制）',
+       detail:'大戶等級全通路 3.5%，任何餐廳無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  delivery:{title:'外送平台',sub:'外送平台刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'Uber Eats、foodpanda、foodomo（切換【數趣刷】）',
+       detail:'切換【數趣刷】，外送平台屬網購通路，3.3% 無上限。',
+       cond:'每日限切換一次｜來源：台新官網'},
+      {card:'玉山 UBear 卡',rate:'最高3%',rc:'tg',
+       stores:'Uber Eats、foodpanda（屬網購/行動支付通路）',
+       detail:'外送平台屬網購通路，享最高 3%（基本 1% + 加碼 2%）。',
+       cond:'加碼每期上限 $150；單筆需 ≥$100｜來源：玉山官網'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'tb',
+       stores:'Uber Eats、foodpanda（切換【玩數位】）',
+       detail:'切換【玩數位】，外送平台列入指定通路，3%。',
+       cond:'需達 Level2｜來源：國泰官網'},
+    ],
+    warns:[]},
+  cafe:{title:'咖啡 / 飲料',sub:'咖啡廳及手搖飲刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.3~3.8%',rc:'tg',
+       stores:'台新 Pay 支援→3.8%：路易莎、怡客咖啡；其他咖啡廳切換【好饗刷】→3.3%：星巴克、各手搖飲',
+       detail:'台新 Pay 路易莎 3.8%；其他咖啡廳切換【好饗刷】3.3%。',
+       cond:'需 Level2；每日限切換一次｜來源：台新官網'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'tb',
+       stores:'切換【樂饗購】：星巴克、路易莎、各咖啡廳',
+       detail:'切換【樂饗購】，餐飲類含咖啡廳，3%。',
+       cond:'需達 Level2｜來源：國泰官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'所有咖啡廳 / 飲料店',
+       detail:'大戶等級全通路 3.5%，無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  online:{title:'網購平台',sub:'台灣主要網購平台刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'切換【數趣刷】：momo 購物、PChome 24h、蝦皮購物、博客來、Amazon、東森購物、Coupang 酷澎（※ PChome 購物車含儲值金則整筆訂單不計回饋）',
+       detail:'切換【數趣刷】，主要電商平台均列入，3.3% 無上限。',
+       cond:'每日限切換一次；PChome 儲值金整筆排除｜來源：台新官網、beurlife.com'},
+      {card:'玉山 UBear 卡',rate:'最高3%',rc:'tg',
+       stores:'momo、PChome、蝦皮、Coupang 酷澎、淘寶、線上訂房、高鐵線上購票；行動支付含 LINE Pay、街口支付等（超商、全聯、分期排除）',
+       detail:'網購/行動支付最高 3%（基本 1% + 加碼 2%）。',
+       cond:'加碼每期上限 $150；單筆需 ≥$100｜來源：玉山官網、iCard.AI 2026/03'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'tb',
+       stores:'切換【玩數位】：momo、PChome、蝦皮、Uber Eats、foodpanda 等',
+       detail:'切換【玩數位】，主流電商 3% 無上限。',
+       cond:'需達 Level2｜來源：國泰官網'},
+    ],
+    warns:[]},
+  streaming:{title:'串流影音',sub:'串流訂閱刷卡建議（2026/03 查核）',
+    items:[
+      {card:'玉山 UBear 卡',rate:'10%',rc:'tg',
+       stores:'Netflix、ChatGPT Plus（OpenAI）、Gemini（Google）、Steam、Nintendo eShop、PlayStation Store（需在原平台直接扣繳，透過 Google/PayPal 代扣不算）',
+       detail:'指定娛樂/影音平台享 10% 現金回饋，每期上限 $100。',
+       cond:'每期上限 $100，達上限後連 1% 也停｜來源：玉山官網、iCard.AI 2026/03'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'切換【數趣刷】：Netflix、Disney+（2026 新增）',
+       detail:'切換【數趣刷】，串流平台 2026 年新增 Netflix、Disney+，享 3.3%。',
+       cond:'每日限切換一次｜來源：台新官網 2026/01'},
+    ],
+    warns:[
+      '⚠ 玉山 UBear 卡：每期達上限 $100 後，連基本回饋也停止。（來源：玉山官網）',
+      '⚠ Disney+ 在玉山 UBear 卡不在指定娛樂平台清單，僅能拿 3% 網購回饋，不能拿 10%。（來源：iCard.AI 2026/03）',
+    ]},
+  aitools:{title:'AI 工具訂閱',sub:'AI 工具及雲端服務刷卡建議（2026/03 查核）',
+    items:[
+      {card:'玉山 UBear 卡',rate:'10%',rc:'tg',
+       stores:'ChatGPT Plus（OpenAI）、Gemini Advanced（Google）（需在原平台直接扣繳）',
+       detail:'ChatGPT、Gemini 列入指定娛樂平台，享 10%，每期上限 $100。',
+       cond:'每期上限 $100；需在原平台消費｜來源：玉山官網、iCard.AI 2026/03'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'切換【數趣刷】：ChatGPT、Notion、Canva、Perplexity、Claude（2026 新增）',
+       detail:'切換【數趣刷】，AI 工具 2026 大幅新增通路，享 3.3%。',
+       cond:'每日限切換一次｜來源：台新官網 2026/01'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'tb',
+       stores:'切換【玩數位】：ChatGPT 等 AI 工具（確認列入當期通路）',
+       detail:'切換【玩數位】，AI 工具可能列入數位通路，3%。',
+       cond:'需達 Level2；每期確認 CUBE App 通路清單｜來源：國泰官網'},
+    ],
+    warns:[]},
+  games:{title:'遊戲 / 數位商店',sub:'遊戲訂閱及數位商城刷卡建議（2026/03 查核）',
+    items:[
+      {card:'玉山 UBear 卡',rate:'10%',rc:'tg',
+       stores:'Steam、PlayStation Store（PSN）、Nintendo eShop（需在原平台直接扣繳）',
+       detail:'指定遊戲平台享 10%，每期上限 $100。',
+       cond:'每期上限 $100；透過其他平台代扣不算；達上限後連 1% 也停｜來源：玉山官網'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'切換【數趣刷】：Steam、PlayStation、Nintendo（2026 新增）、MyCard、遊戲橘子',
+       detail:'切換【數趣刷】，遊戲平台 2026 年大幅新增，享 3.3%。',
+       cond:'每日限切換一次｜來源：台新官網 2026/01'},
+    ],
+    warns:[]},
+  skm:{title:'新光三越',sub:'新光三越各館刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'最高4.8%',rc:'tg',
+       stores:'新光三越全台各館：台北信義 A11/A8/A9、南西一二館、中山館、桃園館、台中中港館、高雄左營館、台南西門館等',
+       detail:'切換【Pay著刷】台新 Pay 在新光三越 3.8%；台新為合作銀行，週五～日加碼 1% 合計最高 4.8%。',
+       cond:'週末加碼月上限 $1,200；需 Level2；2026/1~12｜來源：台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'新光三越全台各館',
+       detail:'大戶等級全通路 3.5%。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'ta',
+       stores:'新光三越各館（切換【樂饗購】含美食；其他樓層確認方案）',
+       detail:'切換【樂饗購】含美食，其他樓層需確認切換方案，3%。',
+       cond:'需達 Level2｜來源：國泰官網'},
+    ],
+    warns:[]},
+  sogo:{title:'SOGO 崇光',sub:'SOGO 各館刷卡建議（2026/03 查核）',
+    items:[
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'太平洋 SOGO：台北忠孝/復興/天母、中壢、桃園、新竹、台中、廣三 SOGO',
+       detail:'大戶等級全通路 3.5%，SOGO 屬一般消費，最省心。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'廣三 SOGO、遠東 SOGO（切換【大筆刷】，確認列入）',
+       detail:'切換【大筆刷】，指定百貨含 SOGO，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+    ],
+    warns:[]},
+  breeze:{title:'微風廣場',sub:'微風各館刷卡建議（2026/03 查核）',
+    items:[
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'微風廣場：台北松高/信義/南京/復興/天母/建北館、微風嘉義、微風台南',
+       detail:'大戶等級全通路 3.5%。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'微風廣場各館（切換【大筆刷】）',
+       detail:'切換【大筆刷】，微風廣場列入指定百貨，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+    ],
+    warns:[]},
+  att:{title:'ATT / 統一時代 / 京站 / 三創',sub:'2026 上半年台新【大筆刷】新增通路（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'ATT 4 FUN（台北信義/行天宮）、統一時代百貨（台北信義/含 DREAM PLAZA/台南）、京站時尚廣場（台北北車）、三創生活（台北市）、夢時代（高雄）、中友百貨（台中）',
+       detail:'切換【大筆刷】，上述商場均列入 2026 上半年指定百貨通路，3.3%。',
+       cond:'每日限切換一次｜來源：數位時代 2026/01、台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'以上全部商場',
+       detail:'大戶等級全通路 3.5%，無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  dept_other:{title:'其他百貨 / 購物中心',sub:'遠東、漢神、誠品、台北101等刷卡建議（2026/03 查核）',
+    items:[
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tg',
+       stores:'遠東百貨（全台）、漢神百貨/漢神巨蛋（高雄）、誠品生活（全台）、台北 101 購物中心、大江購物中心（桃園）',
+       detail:'大戶等級全通路無腦刷，任何百貨均適用。',
+       cond:'月加碼上限 $400；需 DAWHO 帳戶月均 $10 萬｜來源：永豐官網'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'台北 101、遠東百貨、漢神百貨（確認列入【大筆刷】）',
+       detail:'切換【大筆刷】，指定百貨含上述通路，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+    ],
+    warns:[]},
+  uniqlo:{title:'UNIQLO',sub:'UNIQLO 門市刷卡建議（2026/03 查核）',
+    items:[
+      {card:'聯邦吉鶴卡',rate:'最高5.5%',rc:'tg',
+       stores:'⚠ 限 UNIQLO 台灣獨立門市（百貨店中店不計）：台北信義/東區/中山/南西/西門/板橋/新竹/台中/高雄等獨立門市',
+       detail:'台灣日系品牌加碼 4% + 帳戶自扣 0.5% + 基本 1% = 最高 5.5%。',
+       cond:'不適用百貨店中店；月上限 $500；有效至 2026/6/30｜來源：creditcards.com.tw 2026/01'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'UNIQLO 全台門市（切換【大筆刷】，2026 起時尚品味移至大筆刷）',
+       detail:'切換【大筆刷】，UNIQLO 2026 起列入大筆刷通路，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網 2026/01'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'ta',
+       stores:'UNIQLO 全台門市',
+       detail:'大戶等級全通路 3.5%，無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[
+      '⚠ 吉鶴卡日系品牌回饋「不適用百貨店中店」，需至獨立門市才有 5.5%。（來源：creditcards.com.tw 2026/01）',
+    ]},
+  gu:{title:'GU',sub:'GU 門市刷卡建議（2026/03 查核）',
+    items:[
+      {card:'聯邦吉鶴卡',rate:'最高5.5%',rc:'tg',
+       stores:'⚠ 限 GU 台灣獨立門市（與 UNIQLO 共用月上限 $500）',
+       detail:'台灣日系品牌加碼 4% + 帳戶自扣 0.5% + 基本 1% = 最高 5.5%。',
+       cond:'不適用百貨店中店；月上限 $500；2026/6/30 止｜來源：creditcards.com.tw 2026/01'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'GU 全台門市（切換【大筆刷】）',
+       detail:'切換【大筆刷】，GU 列入大筆刷通路，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'ta',
+       stores:'GU 全台門市',
+       detail:'大戶等級全通路 3.5%，無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  muji:{title:'無印良品 MUJI',sub:'MUJI 門市刷卡建議（2026/03 查核）',
+    items:[
+      {card:'聯邦吉鶴卡',rate:'最高5%',rc:'tg',
+       stores:'⚠ 限 MUJI 台灣獨立門市：MUJI 微風南山/南港/信義/中山/台中等',
+       detail:'台灣日系品牌加碼 4% + 基本 1% = 5%（設帳戶自扣再 +0.5%）。',
+       cond:'確認 MUJI 列入吉鶴卡當期清單；月上限 $500；2026/6/30 止｜來源：creditcards.com.tw'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'MUJI 全台門市（切換【大筆刷】）',
+       detail:'切換【大筆刷】，MUJI 列入大筆刷通路，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'ta',
+       stores:'MUJI 全台門市',
+       detail:'大戶等級全通路 3.5%，無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  nitori:{title:'宜得利 Nitori',sub:'宜得利門市刷卡建議（2026/03 查核）',
+    items:[
+      {card:'聯邦吉鶴卡',rate:'最高5%',rc:'tg',
+       stores:'⚠ 限宜得利台灣獨立門市：宜得利 MITSUI OUTLET PARK/中和/高雄等',
+       detail:'台灣日系品牌加碼 4% + 基本 1% = 5%（設帳戶自扣再 +0.5%）。',
+       cond:'確認宜得利列入吉鶴卡當期清單；月上限 $500；2026/6/30 止｜來源：creditcards.com.tw'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'宜得利 Nitori 全台門市（切換【大筆刷】）',
+       detail:'切換【大筆刷】，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'ta',
+       stores:'宜得利 Nitori 全台門市',
+       detail:'大戶等級全通路 3.5%。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  donki:{title:'唐吉軻德 Don Don Donki',sub:'台灣唐吉軻德門市刷卡建議（2026/03 查核）',
+    items:[
+      {card:'聯邦吉鶴卡',rate:'最高5%',rc:'tg',
+       stores:'唐吉軻德台灣門市：台北信義/西門/中山/士林/板橋等',
+       detail:'台灣日系品牌加碼 4% + 基本 1% = 5%（設帳戶自扣再 +0.5%）。',
+       cond:'確認唐吉軻德列入吉鶴卡當期清單；月上限 $500；2026/6/30 止｜來源：roo.cash 2025/07'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'唐吉軻德台灣門市（切換【天天刷】，2026 新增）',
+       detail:'切換【天天刷】，唐吉軻德 2026 新增列入天天刷通路，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網 2026/01'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'唐吉軻德台灣全門市',
+       detail:'大戶等級全通路 3.5%，無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  niko:{title:'niko and... / 其他日系服飾',sub:'日系服飾品牌刷卡建議（2026/03 查核）',
+    items:[
+      {card:'聯邦吉鶴卡',rate:'最高5%',rc:'tg',
+       stores:'⚠ 限獨立門市：niko and...、earth music&ecology、低調、Adam et Ropé 等日系服飾品牌',
+       detail:'台灣日系品牌加碼 4% + 基本 1% = 5%（設帳戶自扣再 +0.5%）。',
+       cond:'需確認各品牌列入吉鶴卡當期清單；月上限 $500；2026/6/30 止'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'各日系服飾門市（切換【大筆刷】）',
+       detail:'切換【大筆刷】，日系服飾 2026 起統一列入大筆刷，3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'各日系服飾門市（任何地點）',
+       detail:'大戶等級全通路 3.5%，無需查詢清單。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:['⚠ 吉鶴卡日系品牌加碼「不適用百貨店中店」，需至品牌獨立門市消費才有加碼。（來源：creditcards.com.tw 2026/01）']},
+  train:{title:'高鐵 / 台鐵 / 捷運',sub:'大眾交通刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'切換【玩旅刷】：台灣高鐵（THSRi）、台鐵（e訂通）、台北/台中/高雄捷運儲值、Uber（台灣）、台灣大車隊、Yoxi、Bolt、日本 Suica/ICOCA（2026 新增）、韓國 WowPass（2026 新增）',
+       detail:'切換【玩旅刷】，上述交通通路享 3.3% 無上限。',
+       cond:'每日限切換一次｜來源：台新官網 2026/01'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'所有交通通路（高鐵/台鐵/捷運/計程車）',
+       detail:'大戶等級全通路 3.5%，含高鐵/台鐵/客運，無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+    ],
+    warns:[]},
+  parking:{title:'停車場',sub:'市區停車建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'免費6小時/月',rc:'tg',
+       stores:'台新合作停車場：嘟嘟房（中興嘟嘟房）、車麻吉（Autopass 快速通）、城市車旅、ViVi Park、USPACE、24TPS 永固便利、台灣聯通、iRent、UDRIVE',
+       detail:'當月帳單一般消費達 $6,000，次月享免費停車 6 小時（每次折 1 小時，每天 1 次）；另享免費機車路邊停車 8 次。需在 Richart Life App 領取序號後兌換。',
+       cond:'⚠ 嘟嘟房/24TPS：自動繳費機需實體卡，不接受 Apple Pay；⚠ 車麻吉：需 App 綁定並開啟自動折抵；⚠ 城市車旅之車麻吉場站不適用｜來源：台新官網 2026'},
+      {card:'永豐大戶卡',rate:'3.5%（消費回饋）',rc:'tb',
+       stores:'嘟嘟房、車麻吉、ViVi Park、台灣聯通、iParking 俥酷等（一般消費回饋）',
+       detail:'大戶等級全通路 3.5%，停車費屬一般消費；無免費停車時數，但有現金回饋。',
+       cond:'月加碼上限 $400｜來源：永豐官網、iParking App'},
+    ],
+    warns:[]},
+  gas:{title:'加油 / 電動車充電',sub:'加油站及充電站刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'切換【天天刷】（2026 起加油移至天天刷）：中油直營（CPC）、全國加油站（全國能源）、全國特急電（充電）、源點 EVOASIS、華城電能 EVALUE、USPACE 充電、Autopass（車麻吉）充電',
+       detail:'切換【天天刷】，加油/充電通路均列入，3.3% 無上限。',
+       cond:'每日限切換一次；⚠ 2026 起加油從玩旅刷移至天天刷，切換勿搞錯｜來源：台新官網 2026/01'},
+      {card:'永豐大戶卡',rate:'3.5%',rc:'tb',
+       stores:'中油、全國、台塑、車友等所有加油站及充電站',
+       detail:'大戶等級全通路 3.5%，加油屬一般消費，無需切換。',
+       cond:'月加碼上限 $400｜來源：永豐官網'},
+      {card:'國泰 CUBE 卡',rate:'2%',rc:'ta',
+       stores:'充電停車精選場域（U-POWER、EVOASIS、EVALUE、TAIL、iCharging、車麻吉不含加油、uTagGo 不含月租停車）',
+       detail:'切換【集精選】，2026 上半年新增充電停車通路，享 2%。',
+       cond:'加油站不含在集精選通路；僅限充電停車場域｜來源：cardu.com.tw 2025/12'},
+    ],
+    warns:[
+      '⚠ 台新 Richart 卡：2026 年起加油/充電從【玩旅刷】移至【天天刷】，切換錯誤只拿 0.3%。（來源：台新官網 2026/01）',
+    ]},
+  flight:{title:'機票 / 訂房',sub:'機票及訂房刷卡建議（2026/03 查核）',
+    items:[
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tg',
+       stores:'切換【玩旅刷】訂房：Agoda、Booking.com、Hotels.com、Expedia、Airbnb、Trip.com、KLOOK、KKday（2026 新增）；機票：中華/長榮/星宇/國泰/ANA/樂桃/阿聯酋/亞洲/酷航/捷星/新加坡/日本/越捷航空等 15 家；旅行社：雄獅/易飛/東南/可樂/燦星/山富等 13 家',
+       detail:'切換【玩旅刷】，上述訂房/機票通路均列入，3.3% 無上限。',
+       cond:'每日限切換一次｜來源：台新官網 2026/01'},
+      {card:'永豐大戶卡',rate:'國外4.5%',rc:'tg',
+       stores:'所有海外訂房/機票（入帳幣別為外幣者）',
+       detail:'大戶等級海外消費 4.5%，刷外幣計費的機票/訂房均適用。',
+       cond:'月加碼上限 $400；以入帳日幣別判斷｜來源：永豐官網'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'tb',
+       stores:'切換【趣旅行】：Agoda、Booking.com 等主要訂房平台',
+       detail:'切換【趣旅行】，機票/訂房 3%。',
+       cond:'需達 Level2；每日限切換一次｜來源：國泰官網'},
+    ],
+    warns:[]},
+  japan:{title:'日本消費（海外）',sub:'赴日旅遊刷卡建議（2026/03 查核）',
+    items:[
+      {card:'聯邦吉鶴卡',rate:'最高8%',rc:'tg',
+       stores:'日本指定 11 大通路：7-ELEVEN（日本）、唐吉軻德（日本）、松本清、藥妝店（神農本草/一心堂）、大創（DAISO）、吉野家、羅森（Lawson）等',
+       detail:'日幣消費基礎 2.5%；前月帳單滿 $3 萬＋登錄後指定通路最高 8%。',
+       cond:'有效至 2026/6/30；指定通路月上限 $600 加碼｜來源：creditcards.com.tw 2026/01'},
+      {card:'永豐大戶卡',rate:'4.5%',rc:'tg',
+       stores:'日本全通路（任何接受 Visa 的店家）',
+       detail:'大戶等級海外 4.5%，全通路無腦刷，在非吉鶴指定通路比吉鶴卡更划算。',
+       cond:'月加碼上限 $400；以外幣入帳判斷｜來源：永豐官網'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'tb',
+       stores:'日本全通路（切換【趣旅行】）',
+       detail:'切換【趣旅行】，海外 3%。',
+       cond:'需達 Level2；每日限切換｜來源：國泰官網'},
+    ],
+    warns:[]},
+  abroad:{title:'其他海外消費',sub:'非日本海外（歐美港韓東南亞等）刷卡建議（2026/03 查核）',
+    items:[
+      {card:'永豐大戶卡',rate:'4.5%',rc:'tg',
+       stores:'全球任何接受 Visa 的店家（歐洲/美國/韓國/東南亞/港澳等）',
+       detail:'大戶等級海外全通路 4.5%，最省心選擇。',
+       cond:'月加碼上限 $400；需大戶等級｜來源：永豐官網'},
+      {card:'台新 Richart 卡',rate:'3.3%',rc:'tb',
+       stores:'切換【玩旅刷】：海外訂房/電商；韓國 GS25/emart24/DAISO',
+       detail:'切換【玩旅刷】海外消費 3.3%。',
+       cond:'每日限切換一次｜來源：台新官網'},
+      {card:'國泰 CUBE 卡',rate:'3%',rc:'ta',
+       stores:'海外全通路（切換【趣旅行】）',
+       detail:'切換【趣旅行】，海外消費 3%。',
+       cond:'需達 Level2；每日限切換｜來源：國泰官網'},
+    ],
+    warns:[
+      '⚠ 聯邦吉鶴卡：非日本海外消費，基本回饋僅 1%，但 JCB 海外手續費 1.5%，實際倒貼 0.5%，強烈不建議。（來源：creditcards.com.tw 2026/01）',
+    ]},
+};
+
+const CARDS=[
+  {name:'台新 Richart 卡（原 @GoGo 卡）',bank:'台新銀行',badge:'切換型 7 大方案',bs:'color:#534AB7;background:#EEEDFE',
+   perks:[
+     {l:'Pay著刷 — 台新Pay/Apple Pay/Google Pay',v:'最高3.8%',c:'需Level2（帳戶自動扣繳）；無上限'},
+     {l:'Pay著刷 — LINE Pay 綁台新',v:'2.3%',c:'有效至 2026/6/30'},
+     {l:'數趣刷 — 網購/外送/AI工具/串流/遊戲',v:'3.3%',c:'含Netflix/Disney+/Steam/ChatGPT/Claude/Notion等；每日限切換'},
+     {l:'好饗刷 — 餐廳/KTV/FunNow/飯店餐飲',v:'3.3%',c:'含王品/鬍鬚張/好樂迪/錢櫃/雲朗集團等'},
+     {l:'玩旅刷 — 機票/訂房/交通/日韓交通卡',v:'3.3%',c:'含15家航空/13家旅行社/Suica/ICOCA/WowPass等'},
+     {l:'大筆刷 — 百貨/服飾（UNIQLO/GU/ZARA等）',v:'3.3%',c:'新光三越/微風/SOGO/ATT/統一時代/京站/三創/UNIQLO/GU等'},
+     {l:'天天刷 — 超商/量販/加油/充電/藥妝',v:'3.3%',c:'7-11（台新Pay）/全家/家樂福/中油/全國加油/康是美/唐吉軻德/LOPIA等'},
+     {l:'假日刷 — 週末/國定假日（含街口/LINE Pay）',v:'2%',c:'LINE Pay、街口支付在假日可拿 2%'},
+     {l:'保費（任何方案皆適用）',v:'1.3%',c:'或12期0利率擇一；一次付清'},
+     {l:'一般消費（未切換或非指定通路）',v:'0.3%',c:'台新Point，2年有效'},
+   ],
+   note:'⚠ 街口支付在所有方案均不適用加碼（0.3%），僅假日刷在假日可拿 2%。⚠ 2026 起加油移至天天刷（非玩旅刷）。⚠ UNIQLO/服飾 2026 起移至大筆刷。台新 Pay 超商代收繳費無回饋（實測）。消費達 $6,000 享次月免費停車 6 小時。',
+   src:'台新銀行官網、數位時代 2026/01、beurlife.com 2026/03、Dcard 2026/03'},
+  {name:'國泰 CUBE 卡',bank:'國泰世華銀行',badge:'切換型 5 大常駐方案',bs:'color:#534AB7;background:#EEEDFE',
+   perks:[
+     {l:'玩數位 — 電商/串流/外送/AI工具',v:'3%（Level2）',c:'無上限；含momo/蝦皮/Uber Eats/foodpanda等'},
+     {l:'樂饗購 — 餐廳/咖啡/外食',v:'3%（Level2）',c:'無上限；含星巴克/路易莎等'},
+     {l:'趣旅行 — 機票/訂房/交通/海外',v:'3%（Level2）',c:'含Agoda/Booking等訂房，海外消費'},
+     {l:'集精選 — 全聯/家樂福/7-11/全家/IKEA/充電停車',v:'2%（Level2）',c:'2026新增充電停車（U-POWER/EVOASIS/車麻吉等）'},
+     {l:'LINE Pay（領券制，非常駐方案）',v:'最高2%',c:'月8筆；每月上限100點；帳期上限400點；需每月App領券'},
+     {l:'慶生月 — 生日當月',v:'最高10%',c:'需切換至慶生月方案；指定餐旅娛樂'},
+     {l:'一般消費（未切換）',v:'0.3%',c:'小樹點，3年有效；帳單最多折抵30%'},
+   ],
+   note:'⚠「來支付」常駐方案已於 2025/12 取消；LINE Pay 改為每月領券制（月8筆上限100點）。⚠ Level2 需完成：以 CUBE App 繳本人信用卡費 OR 以國泰帳戶自動扣繳（擇一，最晚月底 3 個工作日前）。⚠ 分期零利率交易不計指定通路回饋（只給 0.3%）。',
+   src:'cashfeel.com.tw 2026/03、cardu.com.tw 2025/12、國泰世華官網'},
+  {name:'玉山 Pi 錢包卡',bank:'玉山銀行',badge:'累積滿額型',bs:'color:#185FA5;background:#E6F1FB',
+   perks:[
+     {l:'全家綁 Pi 拍錢包消費',v:'5% P幣',c:'每月上限100P幣（$2,000）；需綁Pi拍錢包App'},
+     {l:'月消費累積≥$30,000',v:'最高3% P幣',c:'每月上限1,000P幣；需登錄'},
+     {l:'月消費累積≥$10,000',v:'1.8% P幣',c:'加碼0.8%；需登錄'},
+     {l:'一般消費（帳單e化）',v:'1% P幣',c:'無上限'},
+     {l:'保費',v:'1.2% P幣',c:'或12期0利率擇一'},
+   ],
+   note:'⚠ P幣自匯入起 180 天有效，注意使用期限。全家另計 5%，排除在一般消費之外。需綁定 Pi 拍錢包 App。',
+   src:'玉山銀行官網、creditcards.com.tw 2026/03'},
+  {name:'玉山 UBear 卡',bank:'玉山銀行',badge:'網購 / 訂閱專用',bs:'color:#3B6D11;background:#EAF3DE',
+   perks:[
+     {l:'指定娛樂：Netflix/ChatGPT/Gemini/Steam/Nintendo/PlayStation',v:'10%',c:'每期上限$100；達上限後連1%也停；需在原平台直接扣繳'},
+     {l:'網購/行動支付（帳單e化+玉山帳戶自動扣繳）',v:'最高3%',c:'加碼2%每期上限$150（月$7,500內）；單筆≥$100'},
+     {l:'基本一般消費（帳單e化+自扣）',v:'1%',c:'無上限'},
+     {l:'超商/全聯/分期交易',v:'✗ 明確排除',c:'不計入網購或娛樂回饋'},
+   ],
+   note:'⚠ 娛樂 10% 需在原平台直接扣款，透過 Google/PayPal 代扣不算。⚠ 網購加碼 2% 逐筆無條件捨去，加碼起算 $50，基本 1% 起算 $100。⚠ 超商/全聯/分期明確排除。',
+   src:'玉山銀行官網、iCard.AI 2026/03'},
+  {name:'永豐大戶卡',bank:'永豐銀行',badge:'全通路無腦型',bs:'color:#0F6E56;background:#E1F5EE',
+   perks:[
+     {l:'大戶等級 國內（DAWHO帳戶月均≥$10萬）',v:'3.5%',c:'加碼2.5%，月上限$400（最多刷$16,000）'},
+     {l:'大戶等級 國外',v:'4.5%',c:'加碼月上限$400'},
+     {l:'悠遊卡自動加值（大戶等級）',v:'3%',c:'月上限$100（加值$3,333）；獨立計算'},
+     {l:'大戶Plus 國內（資產≥$100萬+換匯/台股）',v:'最高5%',c:'加碼4%，月上限$1,000（最多刷$25,000）'},
+     {l:'大戶Plus 國外',v:'最高6%',c:'加碼月上限$1,000'},
+     {l:'大戶Plus 悠遊卡自動加值',v:'5%',c:'月上限$500；獨立計算'},
+     {l:'大大等級（未達門檻）',v:'1%（國外2%）',c:'無上限；無加碼'},
+   ],
+   note:'⚠ 2026 起取消七大指定通路，改為全通路無腦刷。加碼條件：需同時完成①DAWHO帳戶自動扣繳②電子帳單，缺一不補加碼。⚠ 2024/1起不可在7-ELEVEN直刷、綁Apple Pay/Google Pay在7-11使用。',
+   src:'永豐銀行官網、cashfeel.com.tw 2026/01'},
+  {name:'聯邦吉鶴卡',bank:'聯邦銀行',badge:'日系 / 旅遊專用',bs:'color:#993C1D;background:#FAECE7',
+   perks:[
+     {l:'日本指定11大通路（7-11/唐吉軻德/松本清等）',v:'最高8%',c:'需前月帳單$3萬+登錄；月上限$600加碼'},
+     {l:'日本實體 Apple Pay（前月$3萬+登錄）',v:'最高5%',c:'月上限$600加碼'},
+     {l:'日幣消費（全通路，無需登錄）',v:'2.5%',c:'無上限'},
+     {l:'台灣日系品牌獨立店（UNIQLO/GU/MUJI/宜得利/唐吉軻德等）',v:'最高5.5%',c:'加碼4%月上限$500；設帳戶自扣+0.5%；2026/6/30止；不適用百貨店中店'},
+     {l:'萊爾富超商（JCB直刷）',v:'95折（約5%）',c:'無金額上限；2026/6/30止'},
+     {l:'台灣指定日系餐廳（現場出示實體卡）',v:'最高10%折扣',c:'各店條件不同；詳聯邦官網'},
+     {l:'國內一般消費',v:'1%',c:'無上限'},
+   ],
+   note:'⚠ 非日本海外（歐美等）：1%回饋-1.5%手續費=實際虧損，不建議。7-11/全家不接受JCB直刷。每年2次機場貴賓室（LoungeKey）。日系品牌加碼不適用百貨店中店。',
+   src:'聯邦銀行官網、creditcards.com.tw 2026/01'},
+];
+
+let myStores=JSON.parse(localStorage.getItem('ev_stores')||'[]');
+let myStoreRecs=JSON.parse(localStorage.getItem('ev_srecs')||'[]');
+
+function renderCatPanel(){
+  const p=document.getElementById('cat-panel');
+  let h='';
+  CAT_GROUPS.forEach(g=>{
+    h+=`<div class="cg-label">${g.group}</div>`;
+    g.cats.forEach(c=>{h+=`<button class="cbtn" data-id="${c.id}">${c.label}</button>`;});
+  });
+  p.innerHTML=h;
+  p.querySelectorAll('.cbtn').forEach(b=>{
+    b.addEventListener('click',()=>{
+      p.querySelectorAll('.cbtn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderDetail(b.dataset.id);
+    });
+  });
+}
+
+function renderDetail(id){
+  const d=R[id];
+  const p=document.getElementById('det-panel');
+  if(!d){p.innerHTML='<div class="det-ph">資料準備中</div>';return;}
+  let h=`<div class="det-title">${d.title}</div><div class="det-sub">${d.sub}</div><div class="rlist">`;
+  d.items.forEach((r,i)=>{
+    h+=`<div class="rrow"><div class="rheader"><div class="rname">${i+1}. ${r.card}</div><span class="rtag ${r.rc}">${r.rate}</span></div>`;
+    if(r.stores)h+=`<div class="rstores"><b>適用店家：</b>${r.stores}</div>`;
+    h+=`<div class="rdetail">${r.detail}</div><div class="rcond">${r.cond}</div></div>`;
+  });
+  h+=`</div>`;
+  if(d.warns&&d.warns.length)d.warns.forEach(w=>{h+=`<div class="wblk">${w}</div>`;});
+  h+=`<div class="det-footer">所有數字依各銀行官網最終條款為準 ／ 查核：2026/03 ／ 每期活動調整請至各銀行 App 確認最新通路清單</div>`;
+  p.innerHTML=h;
+}
+
+function renderCards(){
+  document.getElementById('cards-grid').innerHTML=CARDS.map(c=>`
+    <div class="ctile">
+      <div class="ctop"><div><div class="cname">${c.name}</div><div class="cbank">${c.bank}</div></div><span class="cbadge" style="${c.bs}">${c.badge}</span></div>
+      <div class="perks">${c.perks.map(p=>`<div class="prow"><span class="plabel">${p.l}</span><div class="pright"><div class="pval">${p.v}</div><div class="plimit">${p.c}</div></div></div>`).join('')}</div>
+      <div class="cfooter">${c.note}<div class="csrc">查核來源：${c.src}</div></div>
+    </div>`).join('');
+}
+
+function renderStores(){
+  const t=document.getElementById('store-tags');
+  t.innerHTML=myStores.length?myStores.map((s,i)=>`<span class="stag">${s}<button onclick="removeStore(${i})">×</button></span>`).join(''):`<span style="color:var(--hint);font-size:13px">尚無商店</span>`;
+  const l=document.getElementById('store-recs');
+  l.innerHTML=myStoreRecs.length?myStoreRecs.map((r,i)=>`<div class="srec"><span class="srec-store">${r.store}</span><span class="srec-card">${r.card}</span><span class="srec-rate">${r.rate}</span><span style="font-size:12px;color:var(--hint);flex:1">${r.note||''}</span><button class="srec-del" onclick="delStoreRec(${i})">×</button></div>`).join(''):`<div class="empty">點「+ 新增記錄」加入你的商店刷卡攻略</div>`;
+}
+
+function addStore(){
+  const i=document.getElementById('store-inp');
+  const v=i.value.trim();
+  if(!v||myStores.includes(v)){i.value='';return;}
+  myStores.push(v);save();i.value='';renderStores();
+}
+function removeStore(i){myStores.splice(i,1);save();renderStores();}
+function saveStoreRec(){
+  const s=document.getElementById('sf-store').value.trim();
+  const c=document.getElementById('sf-card').value.trim();
+  const r=document.getElementById('sf-rate').value.trim();
+  const n=document.getElementById('sf-note').value.trim();
+  if(!s||!c)return;
+  myStoreRecs.push({store:s,card:c,rate:r,note:n});save();
+  ['sf-store','sf-card','sf-rate','sf-note'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('store-form').classList.remove('show');
+  renderStores();
+}
+function delStoreRec(i){myStoreRecs.splice(i,1);save();renderStores();}
+function save(){
+  try{
+    localStorage.setItem('ev_stores',JSON.stringify(myStores));
+    localStorage.setItem('ev_srecs',JSON.stringify(myStoreRecs));
+  }catch(e){}
+}
+
+document.querySelectorAll('.ptab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.ptab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.ppanel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+  });
+});
+document.getElementById('store-inp').addEventListener('keydown',e=>{if(e.key==='Enter')addStore();});
+
+renderCatPanel();renderCards();renderStores();
+</script>
+</body>
+</html>
